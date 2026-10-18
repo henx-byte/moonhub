@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Moonhub",
+    "slug": "moonhub",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "moonhub",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.moonhub.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#0a0a0a"
+      },
+      "package": "com.moonhub.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-video",
+      "expo-audio"
+    ]
+  }
+}
