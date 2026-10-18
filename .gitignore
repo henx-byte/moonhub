@@ -39,3 +39,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+
+copy_moonhub_files.sh
+moonhub_dump_txt

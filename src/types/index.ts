@@ -1,34 +1,34 @@
-export type MediaType = "video" | "audio" | "image" | "unknown";
+export type MediaType = "video" | "music" | "image";
+
+export type LibraryMediaType = MediaType | "mixed";
 
 export interface MediaItem {
-  id: string;
+  id: string; 
   sourceId: string;
-  name: string;
-  title?: string;
-  path?: string;
-  uri?: string;
+  name: string; 
+  title?: string; 
+  path: string; 
+  uri: string; 
   size?: number;
   duration?: number;
-  mimeType?: string;
-  mediaType: MediaType;
-  type?: "movie" | "episode" | "song" | "file";
+  mimeType?: string; 
+  mediaType: MediaType; 
+  type?: "movie" | "episode" | "song" | "chapter" | "file";
   thumbnail?: string;
-  year?: number;
-  overview?: string;
 }
 
 export interface Library {
   id: string;
-  name: string;
-  path: string;
-  mediaType: "movie" | "series" | "music" | "mixed";
+  name: string; 
+  path: string; 
+  mediaType: LibraryMediaType; 
 }
 
 export interface SourceConfig {
   id: string;
   name: string;
-  type: "local" | "gdrive" | "webdav" | "radio";
+  type: "local" | "gdrive" | "radio";
   enabled: boolean;
-  config?: Record<string, any>;
+  config?: Record<string, any>; 
   libraries?: Library[];
 }
