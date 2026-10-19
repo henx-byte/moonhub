@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { colors } from "../src/theme/colors";
 import { PlayerProvider } from "../src/context/PlayerContext";
+import { MiniPlayer } from "../src/components/MiniPlayer";
 
 export default function RootLayout() {
  return (
@@ -17,6 +18,7 @@ export default function RootLayout() {
     >
      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
+    <MiniPlayer/>
    </PlayerProvider>
   </>
  );
