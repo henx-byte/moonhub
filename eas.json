@@ -1,0 +1,13 @@
+{
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "expoDoctor": false
+    },
+    "preview": {
+      "distribution": "internal",
+      "expoDoctor": false
+    }
+  }
+}

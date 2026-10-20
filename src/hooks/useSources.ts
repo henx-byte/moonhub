@@ -9,13 +9,14 @@ export function useSources() {
   const [sources, setSources] = useState<Source[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function refresh() {
+  const refresh = async () => {
     setLoading(true);
     const cfgs = await getSourceConfigs();
     setConfigs(cfgs);
-    setSources(createAllSources(cfgs));
+    const srcs = createAllSources(cfgs);
+    setSources(srcs);
     setLoading(false);
-  }
+  };
 
   useEffect(() => {
     refresh();

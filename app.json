@@ -3,21 +3,11 @@
   "name": "Moonhub",
   "slug": "moonhub",
   "version": "1.0.0",
-  "orientation": "portrait",
+  "orientation": "default",
   "icon": "./assets/icon.png",
   "userInterfaceStyle": "dark",
   "scheme": "moonhub",
-  "ios": {
-   "supportsTablet": true,
-   "bundleIdentifier": "com.moonhub.app"
-  },
-  "android": {
-   "adaptiveIcon": {
-    "foregroundImage": "./assets/icon.png",
-    "backgroundColor": "#0a0a0a"
-   },
-   "package": "com.moonhub.app"
-  },
-  "plugins": ["expo-router", "expo-video", "expo-audio"]
+  "newArchEnabled": false,
+  "plugins": ["expo-router", "expo-video", ["expo-screen-orientation", { "initialOrientation": "DEFAULT" }], ["expo-build-properties", { "android": { "enablePip": true } }]]
  }
 }

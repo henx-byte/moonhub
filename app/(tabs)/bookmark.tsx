@@ -97,7 +97,7 @@ export default function BookmarkScreen() {
         columnWrapperStyle={{ gap: 12 }}
         renderItem={({ item: pl }) => {
           const count = bookmarks.filter(b => b.playlistIds.includes(pl.id)).length;
-          const isPlayingInThis = player.queue.some(q => bookmarks.filter(b => b.playlistIds.includes(pl.id)).some(bb => bb.id === q.id)) && player.isPlaying;
+          const isPlayingInThis = player.queue.some((q:any) => bookmarks.filter(b => b.playlistIds.includes(pl.id)).some(bb => bb.id === q.id)) && player.isPlaying;
           return (
             <TouchableOpacity style={[styles.playlistCard, isPlayingInThis && { borderColor: colors.primary }]} onPress={() => setSelectedPlaylist(pl.id)} onLongPress={() => Alert.alert(pl.name, `${count} items`, [{ text: "Batal", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => deletePlaylist(pl.id) }])}>
               <View style={[styles.playlistCover, { backgroundColor: (pl.color || colors.primary) + "20", borderColor: pl.color || colors.primary }]}>
