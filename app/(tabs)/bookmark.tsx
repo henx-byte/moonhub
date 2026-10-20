@@ -2,7 +2,7 @@
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, TextInput, Modal } from "react-native";
 import { colors } from "../../src/theme/colors";
 import { useBookmarks, BookmarkItem } from "../../src/stores/bookmarkStore";
-import { usePlayer } from "../../src/context/PlayerContext";
+import { useVideoPlayer } from "../../src/context/VideoContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, Stack } from "expo-router";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function BookmarkScreen() {
   const { bookmarks, playlists, removeFromPlaylist, deletePlaylist, createPlaylist } = useBookmarks();
-  const player = usePlayer();
+  const player = useVideoPlayer();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);

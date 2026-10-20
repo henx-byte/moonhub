@@ -1,26 +1,27 @@
-import { useEffect, useState } from "react";
-import { SourceConfig } from "../types";
-import { Source } from "../sources/base/Source";
+import { useState, useEffect, useCallback } from "react";
 import { getSourceConfigs } from "../stores/sourceStore";
 import { createAllSources } from "../sources/factory";
 
 export function useSources() {
-  const [configs, setConfigs] = useState<SourceConfig[]>([]);
-  const [sources, setSources] = useState<Source[]>([]);
+  const [configs, setConfigs] = useState<any[]>([]);
+  const [sources, setSources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const refresh = async () => {
-    setLoading(true);
-    const cfgs = await getSourceConfigs();
-    setConfigs(cfgs);
-    const srcs = createAllSources(cfgs);
-    setSources(srcs);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    refresh();
+  const refresh = useCallback(async () => {
+    try {
+      setLoading(true);
+      const cfgs = await getSourceConfigs();
+      setConfigs(cfgs);
+      const all = createAllSources(cfgs);
+      setSources(all || []);
+      setLoading(false);
+    } catch (e) {
+      console.log("[useSources] error", e);
+      setLoading(false);
+    }
   }, []);
 
-  return { configs, sources, loading, refresh };
+  useEffect(() => { refresh(); }, []);
+
+  return { configs, sources: sources || [], loading, refresh };
 }

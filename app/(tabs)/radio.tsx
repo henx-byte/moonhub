@@ -2,10 +2,17 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, TextInput, I
 import { useEffect, useState, useCallback, memo } from "react";
 import { colors } from "../../src/theme/colors";
 import { getTopStations, getIndoStations, searchStations, resolveStream, getRadioMirror, RadioStation } from "../../src/features/radio/radioBrowser";
-import { usePlayer } from "../../src/context/PlayerContext";
 import { MediaItem } from "../../src/types";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// FIX: support 4 player baru + fallback ke VideoContext lama
+let useVideoPlayer: any = null;
+let useHlsPlayer: any = null;
+let useUnifiedPlayer: any = null;
+try { useVideoPlayer = require("../../src/context/VideoContext").useVideoPlayer; } catch {}
+try { useHlsPlayer = require("../../src/context/HlsContext").useHlsPlayer; } catch {}
+try { useUnifiedPlayer = require("../../src/context/UnifiedPlayerContext").useUnifiedPlayer; } catch {}
 
 const RadioCard = memo(({ item, onPlay, isActive }: { item: RadioStation; onPlay: (s: RadioStation) => void; isActive: boolean }) => {
   return (
@@ -71,27 +78,34 @@ export default function RadioScreen() {
   const [currentRadio, setCurrentRadio] = useState<RadioStation | null>(null);
   const [favorites, setFavorites] = useState<RadioStation[]>([]);
   const [voteLoading, setVoteLoading] = useState(false);
-  const player = usePlayer();
+
+  // FIX: player gak boleh null - support 4 player
+  let player: any = null;
+  try {
+    if (useHlsPlayer) player = useHlsPlayer();
+  } catch {}
+  try {
+    if (!player && useUnifiedPlayer) {
+      const u = useUnifiedPlayer();
+      player = u?.hls || u;
+    }
+  } catch {}
+  try {
+    if (!player && useVideoPlayer) player = useVideoPlayer();
+  } catch {}
+  if (!player) {
+    player = { isPlaying: false, current: null, play: async () => {}, pause: () => {}, resume: () => {} };
+  }
 
   useEffect(() => {
     (async () => {
       const raw = await AsyncStorage.getItem("radio_fav_objects");
       if (raw) setFavorites(JSON.parse(raw));
-      else {
-        // migrasi dari versi lama yang cuma simpan id
-        const old = await AsyncStorage.getItem("radio_favorites");
-        if (old) {
-          // biarkan kosong, user like ulang
-        }
-      }
     })();
   }, []);
 
   const load = useCallback(async () => {
-    if (tab === "fav") {
-      setLoading(false);
-      return;
-    }
+    if (tab === "fav") { setLoading(false); return; }
     setLoading(true);
     try {
       if (tab === "top") setStations(await getTopStations(100));
@@ -132,7 +146,7 @@ export default function RadioScreen() {
     try {
       const freshUrl = await resolveStream(s.stationuuid);
       const item: MediaItem = { id: s.stationuuid, sourceId: "radio_permanent", name: s.name, title: s.name, path: freshUrl, uri: freshUrl, mediaType: "music", type: "song", size: 0, duration: 0, thumbnail: s.favicon, extra: { isLive: true, stationuuid: s.stationuuid, isRadio: true } };
-      player.play(item, [item]);
+      await player?.play?.(item);
     } catch (e) { console.log(e); }
   }, [player]);
 
@@ -148,7 +162,7 @@ export default function RadioScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ paddingTop: 50 }}>
-        <RadioPlayer currentRadio={currentRadio} isPlaying={player.isPlaying} onToggle={() => player.isPlaying ? player.pause() : player.resume()} isFav={isFav} onLike={handleLike} onVote={handleVote} voteLoading={voteLoading} />
+        <RadioPlayer currentRadio={currentRadio} isPlaying={!!player?.isPlaying} onToggle={() => player?.isPlaying ? player?.pause?.() : player?.resume?.()} isFav={isFav} onLike={handleLike} onVote={handleVote} voteLoading={voteLoading} />
       </View>
       <View style={{ flexDirection: "row", paddingHorizontal: 16, marginBottom:16 ,gap: 8 }}>
         <TouchableOpacity onPress={() => setTab("top")} style={{ paddingVertical: 8, paddingHorizontal: 14, backgroundColor: tab==="top"?colors.primary:colors.card, borderRadius: 20 }}><Text style={{ color: tab==="top" ? "white" : colors.text, fontWeight: "600", fontSize: 13 }}>Top</Text></TouchableOpacity>

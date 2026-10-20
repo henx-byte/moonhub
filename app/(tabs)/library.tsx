@@ -6,7 +6,7 @@ import { getSourceConfigs } from "../../src/stores/sourceStore";
 import { createAllSources } from "../../src/sources/factory";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
-import { usePlayer } from "../../src/context/PlayerContext";
+import { useVideoPlayer } from "../../src/context/VideoContext";
 
 function cleanTitle(input: string): string {
   if (!input) return "Unknown";
@@ -29,15 +29,15 @@ export default function LibraryScreen() {
   const [libraries, setLibraries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<string>("all");
-  const { current, isPlaying, playUrl, toggle } = usePlayer();
+  const { current, isPlaying, playUrl, toggle } = useVideoPlayer();
 
   async function loadLibrary() {
     setLoading(true);
     try {
       const configs = await getSourceConfigs();
       const sources = createAllSources(configs.filter(c => c.enabled));
-      let all: MediaItem[] = [];
-      let allLibs: any[] = [];
+      const all: MediaItem[] = [];
+      const allLibs: any[] = [];
       for (const src of sources) {
         const libs = await src.getLibraries();
         allLibs.push(...libs.map((l: any) => ({ ...l, sourceId: src.id })));

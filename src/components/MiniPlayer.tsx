@@ -5,9 +5,10 @@ import {
 	TouchableOpacity,
 	Modal,
 	ScrollView,
+	Image,
 } from 'react-native';
 import { colors } from '../theme/colors';
-import { usePlayer } from '../context/PlayerContext';
+import { useAudioPlayer } from '../context/AudioContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useRef } from 'react';
 import Slider from '@react-native-community/slider';
@@ -15,7 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MediaItem } from '../types';
 
 export function MiniPlayer() {
-	const player = usePlayer();
+	const player = useAudioPlayer();
 	const [expanded, setExpanded] = useState(false);
 	const insets = useSafeAreaInsets();
 	const [isSliding, setIsSliding] = useState(false);
@@ -32,7 +33,6 @@ export function MiniPlayer() {
 
 	if (isRadio) return null; // sesuai request: radio jangan tampil miniplayer
 	if (!current) return null;
-console.log(JSON.stringify({current},null,2))
 	const hasQueue = player.queue.length > 1;
 	const queuePos =
 		player.currentIndex >= 0
@@ -64,11 +64,19 @@ console.log(JSON.stringify({current},null,2))
 					onPress={() => setExpanded(true)}
 					activeOpacity={0.9}>
 					<View style={styles.cover}>
-						<Ionicons
-							name='musical-notes'
-							size={16}
-							color={colors.primary}
-						/>
+						{current?.thumbnail ? (
+							<Image
+								source={{ uri: current.thumbnail }}
+								style={{ width: 44, height: 44, borderRadius: 10 }}
+								resizeMode='cover'
+							/>
+						) : (
+							<Ionicons
+								name='musical-notes'
+								size={16}
+								color={colors.primary}
+							/>
+						)}
 						{hasQueue && (
 							<View style={styles.queueBadge}>
 								<Text style={styles.queueText}>{queuePos}</Text>
@@ -172,15 +180,25 @@ console.log(JSON.stringify({current},null,2))
 						showsVerticalScrollIndicator={false}
 						contentContainerStyle={{ paddingBottom: 20 }}>
 						<View style={styles.bigCover}>
-							<Ionicons
-								name='musical-notes'
-								size={48}
-								color={colors.primary}
-							/>
-							<Text style={{ color: colors.textMuted, marginTop: 8, fontSize: 11 }}>
-								{player.queue.length} songs • {formatTime(displayPos)} /{' '}
-								{formatTime(safeDuration)}
-							</Text>
+							{current?.thumbnail ? (
+								<Image
+									source={{ uri: current.thumbnail }}
+									style={{ width: '100%', height: '100%', borderRadius: 20 }}
+									resizeMode='cover'
+								/>
+							) : (
+								<>
+									<Ionicons
+										name='musical-notes'
+										size={48}
+										color={colors.primary}
+									/>
+									<Text style={{ color: colors.textMuted, marginTop: 8, fontSize: 11 }}>
+										{player.queue.length} songs • {formatTime(displayPos)} /{' '}
+										{formatTime(safeDuration)}
+									</Text>
+								</>
+							)}
 						</View>
 
 						<View style={{ alignItems: 'center', marginTop: 14 }}>
@@ -369,6 +387,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderWidth: 1,
 		borderColor: '#333',
+		overflow: 'visible',
 	},
 	queueBadge: {
 		position: 'absolute',
@@ -448,6 +467,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderWidth: 1,
 		borderColor: colors.border,
+		overflow: 'hidden',
 	},
 	bigTitle: {
 		color: colors.text,
