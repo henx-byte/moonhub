@@ -27,6 +27,13 @@
       ],
       "expo-secure-store",
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "53a72057-f706-40e4-89a2-caeb825695f6"
+      }
+    },
+    "owner": "henxs"
   }
 }
