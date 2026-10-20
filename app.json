@@ -1,13 +1,32 @@
 {
- "expo": {
-  "name": "Moonhub",
-  "slug": "moonhub",
-  "version": "1.0.0",
-  "orientation": "default",
-  "icon": "./assets/icon.png",
-  "userInterfaceStyle": "dark",
-  "scheme": "moonhub",
-  "newArchEnabled": false,
-  "plugins": ["expo-router", "expo-video", ["expo-screen-orientation", { "initialOrientation": "DEFAULT" }], ["expo-build-properties", { "android": { "enablePip": true } }]]
- }
+  "expo": {
+    "name": "Moonhub",
+    "slug": "moonhub",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "moonhub",
+    "newArchEnabled": false,
+    "plugins": [
+      "expo-router",
+      "expo-video",
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enablePip": true
+          }
+        }
+      ],
+      "expo-secure-store",
+      "expo-sqlite"
+    ]
+  }
 }

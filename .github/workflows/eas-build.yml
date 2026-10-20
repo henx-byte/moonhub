@@ -8,14 +8,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-      - run: npm install --legacy-peer-deps
-      - run: eas build --platform android --profile development --non-interactive --no-wait
+
+      - name: Install deps
+        run: npm install --legacy-peer-deps
+
+      - name: Setup EAS CLI
+        run: npm install -g eas-cli@latest
+
+      - name: Build Android Dev Client on EAS Cloud
+        run: eas build --platform android --profile development --non-interactive --no-wait
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
