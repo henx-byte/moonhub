@@ -44,3 +44,5 @@ yarn-error.*
 copy_moonhub_files.sh
 moonhub_dump_txt
 *.log
+# Lint
+.lint/tmp/

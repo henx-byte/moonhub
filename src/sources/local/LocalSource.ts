@@ -1,5 +1,5 @@
-import { StorageAccessFramework } from "expo-file-system/legacy";
-import * as FileSystem from "expo-file-system/legacy";
+import { StorageAccessFramework } from "expo-file-system";
+import * as FileSystem from "expo-file-system";
 import { Source } from "../base/Source";
 import { MediaItem, Library, SourceConfig, MediaType } from "../../types";
 

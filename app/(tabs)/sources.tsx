@@ -5,7 +5,7 @@ import { colors } from "../../src/theme/colors";
 import { SourceConfig } from "../../src/types";
 import { getSourceConfigs, addSourceConfig, removeSourceConfig, updateSourceConfig } from "../../src/stores/sourceStore";
 import { Ionicons } from "@expo/vector-icons";
-import { StorageAccessFramework } from "expo-file-system/legacy";
+import { StorageAccessFramework } from "expo-file-system";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 

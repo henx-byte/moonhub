@@ -34,7 +34,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        initialRouteName="radio"
         name="radio"
         options={{
           title: "Radio",
@@ -63,3 +62,7 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+export const unstable_settings = {
+  initialRouteName: "radio",
+};

@@ -8,7 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter, Stack } from "expo-router";
 import { useBookmarks } from "../../src/stores/bookmarkStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StorageAccessFramework } from "expo-file-system/legacy";
+import { StorageAccessFramework } from "expo-file-system";
 import { getSourceConfigs, saveSourceConfigs } from "../../src/stores/sourceStore";
 
 export default function HomeScreen() {
@@ -31,7 +31,7 @@ export default function HomeScreen() {
         const libs = await src.getLibraries();
         const allItems: MediaItem[] = [];
         for (const lib of libs) { try { const items = await src.getItems(lib.id); allItems.push(...items); } catch {} }
-        if (allItems.length > 0) allSections.push({ sourceId: src.id, sourceName: "Musik HP", sourceType: "local", items: allItems });
+        if (allItems.length > 0) allSections.push({ sourceId: src.id, sourceName: "Local", sourceType: "local", items: allItems });
       } catch {}
     }
     setSections(allSections);

@@ -22,18 +22,17 @@ export function MiniPlayer() {
 	const [slidePos, setSlidePos] = useState(0);
 	const lastSeekRef = useRef(0);
 
-	if (!player.current) return null;
+	const current = player?.current;
 
+	// FIX: deteksi radio yang bener, jangan sampai musik HP ke-detect radio
 	const isRadio =
-		player.current?.extra?.isRadio ||
-		player.current?.extra?.isLive ||
-		player.current?.sourceId === 'radio_permanent' ||
-		player.current?.sourceId === 'radio_default' ||
-		player.current?.sourceId?.includes('radio');
+		current?.mediaType === 'radio' ||
+		current?.extra?.isRadio === true ||
+		(current?.sourceId && current.sourceId.toLowerCase().includes('radio'));
 
-	if (isRadio) return null;
-
-	const current = player.current;
+	if (isRadio) return null; // sesuai request: radio jangan tampil miniplayer
+	if (!current) return null;
+console.log(JSON.stringify({current},null,2))
 	const hasQueue = player.queue.length > 1;
 	const queuePos =
 		player.currentIndex >= 0
@@ -48,14 +47,13 @@ export function MiniPlayer() {
 	};
 
 	const displayPos = isSliding ? slidePos : player.position;
+	const safeDuration = player.duration > 0 ? player.duration : 0;
 
 	const handleSeek = (value: number) => {
-		console.log(
-			`[Slider] Seek to ${value.toFixed(1)} / ${player.duration.toFixed(1)}`,
-		);
 		lastSeekRef.current = Date.now();
 		player.seek(value);
 		setSlidePos(value);
+		setIsSliding(false);
 	};
 
 	if (!expanded) {
@@ -89,13 +87,13 @@ export function MiniPlayer() {
 							{formatTime(player.position)} / {formatTime(player.duration)} •{' '}
 							{queuePos}
 						</Text>
-						{player.duration > 0 && (
+						{safeDuration > 0 && (
 							<View style={styles.progressBg}>
 								<View
 									style={[
 										styles.progressFill,
 										{
-											width: `${Math.min(100, (player.position / player.duration) * 100)}%`,
+											width: `${Math.min(100, (player.position / safeDuration) * 100)}%`,
 										},
 									]}
 								/>
@@ -154,7 +152,7 @@ export function MiniPlayer() {
 						</TouchableOpacity>
 						<Text style={styles.expandedTitle}>
 							Now Playing • {queuePos} • {formatTime(displayPos)} /{' '}
-							{formatTime(player.duration)}
+							{formatTime(safeDuration)}
 						</Text>
 						<TouchableOpacity
 							onPress={() => {
@@ -181,7 +179,7 @@ export function MiniPlayer() {
 							/>
 							<Text style={{ color: colors.textMuted, marginTop: 8, fontSize: 11 }}>
 								{player.queue.length} songs • {formatTime(displayPos)} /{' '}
-								{formatTime(player.duration)}
+								{formatTime(safeDuration)}
 							</Text>
 						</View>
 
@@ -194,28 +192,24 @@ export function MiniPlayer() {
 							<Text style={styles.bigSub}>{current.artist || current.mediaType}</Text>
 						</View>
 
-						{/* FIX SLIDER - gak pake async, direct */}
 						<View style={{ marginTop: 16 }}>
 							<Slider
 								style={{ width: '100%', height: 40 }}
 								minimumValue={0}
-								maximumValue={player.duration > 0 ? player.duration : 100}
+								maximumValue={safeDuration > 0 ? safeDuration : 1}
 								value={displayPos}
 								minimumTrackTintColor={colors.primary}
 								maximumTrackTintColor={colors.border}
 								thumbTintColor={colors.primary}
 								tapToSeek={true}
 								onSlidingStart={v => {
-									console.log(`[Slider] Start sliding at ${v.toFixed(1)}`);
 									setIsSliding(true);
 									setSlidePos(v);
 								}}
 								onValueChange={v => {
-									// Update local aja, jangan seek tiap value change (biar gak lag)
 									setSlidePos(v);
 								}}
 								onSlidingComplete={v => {
-									console.log(`[Slider] Complete sliding to ${v.toFixed(1)}`);
 									setIsSliding(false);
 									handleSeek(v);
 								}}
@@ -227,7 +221,7 @@ export function MiniPlayer() {
 									marginTop: -6,
 								}}>
 								<Text style={styles.timeText}>{formatTime(displayPos)}</Text>
-								<Text style={styles.timeText}>{formatTime(player.duration)}</Text>
+								<Text style={styles.timeText}>{formatTime(safeDuration)}</Text>
 							</View>
 						</View>
 
@@ -306,7 +300,8 @@ export function MiniPlayer() {
 									return (
 										<TouchableOpacity
 											key={`${q.id}-${idx}`}
-											onPress={() => player.play(q)}
+											// FIX QUEUE HILANG: kirim full queue, bukan cuma 1 lagu
+											onPress={() => player.play(q, player.queue)}
 											style={[styles.queueRow, isCur && styles.queueRowActive]}>
 											<View
 												style={[styles.queueNum, isCur && { backgroundColor: '#000' }]}>
@@ -326,7 +321,7 @@ export function MiniPlayer() {
 													numberOfLines={1}>
 													{q.artist || q.mediaType}
 													{isCur
-														? ` • ${formatTime(displayPos)} / ${formatTime(player.duration)}`
+														? ` • ${formatTime(displayPos)} / ${formatTime(safeDuration)}`
 														: ''}
 												</Text>
 											</View>
@@ -350,25 +345,30 @@ export function MiniPlayer() {
 }
 
 const styles = StyleSheet.create({
-	collapsedContainer: { position: 'absolute', left: 12, right: 12, zIndex: 100 },
+	collapsedContainer: {
+		position: 'absolute',
+		left: 12,
+		right: 12,
+		backgroundColor: '#1a1a1a',
+		borderRadius: 16,
+		borderWidth: 1,
+		borderColor: '#2a2a2a',
+		elevation: 8,
+	},
 	collapsedContent: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: colors.card,
-		borderWidth: 1,
-		borderColor: colors.border,
-		borderRadius: 20,
-		padding: 12,
+		padding: 10,
 	},
 	cover: {
-		width: 40,
-		height: 40,
-		borderRadius: 20,
-		backgroundColor: colors.background,
+		width: 44,
+		height: 44,
+		borderRadius: 10,
+		backgroundColor: '#2a2a2a',
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderWidth: 1,
-		borderColor: colors.border,
+		borderColor: '#333',
 	},
 	queueBadge: {
 		position: 'absolute',

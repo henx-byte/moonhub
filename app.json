@@ -1,39 +1,52 @@
 {
-  "expo": {
-    "name": "Moonhub",
-    "slug": "moonhub",
-    "version": "1.0.0",
-    "orientation": "default",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
-    "scheme": "moonhub",
-    "newArchEnabled": false,
-    "plugins": [
-      "expo-router",
-      "expo-video",
-      [
-        "expo-screen-orientation",
-        {
-          "initialOrientation": "DEFAULT"
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "enablePip": true
-          }
-        }
-      ],
-      "expo-secure-store",
-      "expo-sqlite"
-    ],
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "53a72057-f706-40e4-89a2-caeb825695f6"
-      }
-    },
-    "owner": "henxs"
+ "expo": {
+  "name": "Moonhub",
+  "slug": "moonhub",
+  "version": "1.0.0",
+  "orientation": "default",
+  "icon": "./assets/icon.png",
+  "userInterfaceStyle": "dark",
+  "scheme": "moonhub",
+  "newArchEnabled": false,
+  "plugins": [
+   "expo-router",
+   "expo-video",
+   [
+    "expo-build-properties",
+    {
+     "android": {
+      "kotlinVersion": "2.0.21",
+      "compileSdkVersion": 35,
+      "targetSdkVersion": 35
+     }
+    }
+   ],
+   [
+    "expo-screen-orientation",
+    {
+     "initialOrientation": "DEFAULT"
+    }
+   ],
+   [
+    "expo-build-properties",
+    {
+     "android": {
+      "enablePip": true
+     }
+    }
+   ],
+   "expo-secure-store",
+   "expo-sqlite"
+  ],
+  "extra": {
+   "router": {},
+   "eas": {
+    "projectId": "53a72057-f706-40e4-89a2-caeb825695f6"
+   }
+  },
+  "owner": "henxs",
+  "android": {
+   "package": "com.moonhub.app"
   }
+ }
 }

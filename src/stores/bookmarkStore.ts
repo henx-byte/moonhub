@@ -2,6 +2,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MediaItem } from "../types";
 
+import { useEffect, useState } from "react";
+
 const BOOKMARK_KEY = "moonhub_bookmarks_v2"; // ganti key biar migrasi bersih
 const PLAYLIST_KEY = "moonhub_playlists_v2";
 const LEGACY_BOOKMARK_KEY = "moonhub_bookmarks_v1";
@@ -235,8 +237,6 @@ class BookmarkManager {
 }
 
 export const bookmarkManager = new BookmarkManager();
-
-import { useEffect, useState } from "react";
 
 export function useBookmarks() {
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
