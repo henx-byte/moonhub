@@ -33,10 +33,10 @@ class CoreRegistry {
       online: "cloud",
       remote: "cloud",
       api: "cloud",
-      comic: "manga",
-      manhwa: "manga",
-      manhua: "manga",
-      doujin: "manga",
+      comic: "book",
+      manhwa: "book",
+      manhua: "book",
+      doujin: "book",
     };
     const aliased = aliases[normalized];
     if (aliased && this.registry.has(aliased)) return this.registry.get(aliased);
@@ -112,7 +112,7 @@ export function createAllSources(configs: SourceConfig[]): Source[] {
 
 // Auto-register built-in sources (dipanggil sekali di app init)
 // Ini biar app lama tetap jalan tanpa perlu manual register
-export function registerBuiltins(sources: { local?: SourceClass, cloud?: SourceClass, radio?: SourceClass, manga?: SourceClass }) {
+export function registerBuiltins(sources: { local?: SourceClass, cloud?: SourceClass, radio?: SourceClass, comic?: SourceClass }) {
   if (sources.local) registerSource("local", sources.local);
   if (sources.cloud) {
     registerSource("cloud", sources.cloud);
@@ -123,10 +123,10 @@ export function registerBuiltins(sources: { local?: SourceClass, cloud?: SourceC
     registerSource("online", sources.cloud);
   }
   if (sources.radio) registerSource("radio", sources.radio);
-  if (sources.manga) {
-    registerSource("manga", sources.manga);
-    registerSource("comic", sources.manga);
-    registerSource("manhwa", sources.manga);
-    registerSource("manhua", sources.manga);
+  if (sources.book) {
+    registerSource("book", sources.book);
+    registerSource("comic", sources.book);
+    registerSource("manhwa", sources.book);
+    registerSource("manhua", sources.book);
   }
 }

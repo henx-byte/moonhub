@@ -14,7 +14,7 @@ type Props = {
   onPrevChapter?: () => void;
 };
 
-export default function MangaReader({ pages, title, chapterTitle, onClose, onNextChapter, onPrevChapter }: Props) {
+export default function ComicViewer({ pages, title, chapterTitle, onClose, onNextChapter, onPrevChapter }: Props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -51,7 +51,7 @@ export default function MangaReader({ pages, title, chapterTitle, onClose, onNex
         </View>
       </View>
 
-      {/* Reader - Vertical scroll manga style */}
+      {/* Reader - Vertical scroll book style */}
       <FlatList
         data={pages}
         keyExtractor={(item, idx) => `${idx}_${item}`}

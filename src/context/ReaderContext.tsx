@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode } from "react";
-import { useReader } from "../player/useReader";
+import { useReader } from "../player/useComicViewer";
 const Ctx = createContext<any>(null);
 export function ReaderProvider({ children }: { children: ReactNode }) {
   const reader = useReader();

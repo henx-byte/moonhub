@@ -7,14 +7,14 @@ export type MediaType =
   | "music" 
   | "video" 
   | "image" 
-  | "manga" 
+  | "book" 
   | "manhwa" 
   | "manhua"
   | "comic"
   | "mixed"
   | string; // FIX: Generic juga, bisa "podcast", "audiobook", etc
 
-export type MediaItemType = "song" | "movie" | "chapter" | "manga" | "image" | "video" | "audio" | string;
+export type MediaItemType = "song" | "movie" | "chapter" | "book" | "image" | "video" | "audio" | string;
 
 export interface Library {
   id: string;
@@ -68,7 +68,7 @@ export interface MediaItem {
 // Bookmark - Library jadi Bookmark
 export interface BookmarkItem extends MediaItem {
   bookmarkedAt: number;
-  lastPosition?: number; // buat manga/video: halaman / detik terakhir
+  lastPosition?: number; // buat book/video: halaman / detik terakhir
   progress?: number; // 0-100
 }
 

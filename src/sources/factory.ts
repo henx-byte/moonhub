@@ -1,52 +1,30 @@
-import { SourceConfig } from "../types";
-import { Source } from "./base/Source";
+import { ComicSource } from "./comic/ComicSource";
 import { LocalSource } from "./local/LocalSource";
 import { HttpSource } from "./online/HttpSource";
-import { MangaSource } from "./manga/MangaSource";
-import { coreRegistry, registerSource, createSourceInstance as createFromRegistry } from "./core/registry";
+import { createAllSources as _createAllSources, registerSource } from "./core/registry";
 
-let builtinsRegistered = false;
-function ensureBuiltins() {
-  if (builtinsRegistered) return;
-  builtinsRegistered = true;
-  registerSource("local", LocalSource as any);
-  registerSource("cloud", HttpSource as any);
-  registerSource("manga", MangaSource as any);
-  registerSource("gdrive", HttpSource as any);
-  registerSource("http", HttpSource as any);
-  registerSource("https", HttpSource as any);
-  registerSource("server", HttpSource as any);
-  registerSource("online", HttpSource as any);
-  registerSource("api", HttpSource as any);
-  registerSource("comic", MangaSource as any);
-  registerSource("manhwa", MangaSource as any);
-  registerSource("manhua", MangaSource as any);
+export function initSources() {
+  try {
+    registerSource("comic", ComicSource as any);
+    registerSource("book", ComicSource as any);
+    registerSource("graphic", ComicSource as any);
+    registerSource("local", LocalSource as any);
+    registerSource("http", HttpSource as any);
+    registerSource("radio", HttpSource as any);
+    registerSource("musik", LocalSource as any);
+    registerSource("music", LocalSource as any);
+  } catch {}
 }
 
-export { registerSource as registerSourceType };
-export { coreRegistry };
+initSources();
 
-export function createSource(config: SourceConfig): Source {
-  ensureBuiltins();
-  return createFromRegistry(config);
-}
-
-export function createAllSources(configs: SourceConfig[]): Source[] {
-  ensureBuiltins();
-  return configs
-    .filter((c) => c.enabled)
-    .map((c) => {
-      try {
-        return createFromRegistry(c);
-      } catch (e) {
-        console.log(`[Factory] Failed ${c.name}`, e);
-        return null;
-      }
-    })
-    .filter(Boolean) as Source[];
-}
-
-// alias biar useSources lama tetap jalan
-export function createSourceInstance(config: SourceConfig): Source {
-  return createSource(config);
+export function createAllSources(configs: any) {
+  if (!configs || !Array.isArray(configs)) return [];
+  try {
+    initSources();
+    const res = _createAllSources(configs);
+    return Array.isArray(res) ? res : [];
+  } catch {
+    return [];
+  }
 }

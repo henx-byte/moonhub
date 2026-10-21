@@ -21,7 +21,7 @@ export class HttpSource extends Source {
       `${url}/index.json`,
       `${url}/config.json`,
       `${url}/moonhub.json`,
-      `${url}/manga.json`,
+      `${url}/comic.json`,
       `${url}`,
       `${url}/api`,
     ];
@@ -31,7 +31,7 @@ export class HttpSource extends Source {
         const res = await fetch(tryUrl, { headers: { "Accept": "application/json" } });
         if (!res.ok) continue;
         const json = await res.json();
-        console.log(`[HttpSource] Success from ${tryUrl}: ${json.name} | manga=${json.manga?.length}`);
+        console.log(`[HttpSource] Success from ${tryUrl}: ${json.name} | comic=${json.book?.length}`);
         return json;
       } catch (e) {
         console.log(`[HttpSource] Fail ${tryUrl}`);
@@ -64,8 +64,8 @@ export class HttpSource extends Source {
     if (this.fileConfig?.img || this.fileConfig?.image) {
       libs.push({ id: `${this.id}_img`, name: "Images", path: "img", mediaType: "image" } as Library);
     }
-    if (this.fileConfig?.manga || this.fileConfig?.comic || this.fileConfig?.manhwa) {
-      libs.push({ id: `${this.id}_manga`, name: "Manga", path: "manga", mediaType: "manga" } as Library);
+    if (this.fileConfig?.book || this.fileConfig?.comic || this.fileConfig?.manhwa) {
+      libs.push({ id: `${this.id}_comic`, name: "comic", path: "book", mediaType: "book" } as Library);
     }
     if (libs.length === 0) {
       return [{ id: `${this.id}_lib`, name: this.fileConfig?.name || "Remote", path: "mixed", mediaType: "mixed" } as Library];
@@ -94,15 +94,15 @@ export class HttpSource extends Source {
     } else if (libraryId.includes("img")) {
       raw = this.fileConfig.img || this.fileConfig.image;
       mediaType = "image";
-    } else if (libraryId.includes("manga")) {
-      raw = this.fileConfig.manga || this.fileConfig.comic || this.fileConfig.manhwa;
-      mediaType = "manga";
+    } else if (libraryId.includes("book")) {
+      raw = this.fileConfig.book || this.fileConfig.comic || this.fileConfig.manhwa;
+      mediaType = "book";
     } else {
       const all = [
         ...(Array.isArray(this.fileConfig.music) ? this.fileConfig.music : []),
         ...(Array.isArray(this.fileConfig.video) ? this.fileConfig.video : []),
         ...(Array.isArray(this.fileConfig.img) ? this.fileConfig.img : []),
-        ...(Array.isArray(this.fileConfig.manga) ? this.fileConfig.manga : []),
+        ...(Array.isArray(this.fileConfig.book) ? this.fileConfig.book : []),
       ];
       raw = all;
     }
@@ -137,7 +137,7 @@ export class HttpSource extends Source {
         cover: obj.cover ? this.resolvePath(obj.cover) : undefined,
         size: 0,
         mediaType,
-        type: (mediaType === "music" ? "song" : mediaType === "video" ? "movie" : "manga") as any,
+        type: (mediaType === "music" ? "song" : mediaType === "video" ? "movie" : "book") as any,
         extra, // FIX PENTING
       } as MediaItem;
     });

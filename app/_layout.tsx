@@ -12,7 +12,7 @@ import { Mp3PlayerContainer } from '../src/components/mp3/Mp3PlayerContainer';
 export default function RootLayout() {
 	return (
 		<>
-			<StatusBar style='dark' />
+			<StatusBar style='light' />
 			<Mp3Provider>
 				<HlsProvider>
 					<WebViewProvider>

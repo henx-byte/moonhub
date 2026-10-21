@@ -276,7 +276,7 @@ export class LocalSource extends Source {
      let mt: MediaType = "mixed";
      if (["music", "audio", "song", "radio"].includes(key)) mt = "music";
      else if (["video", "movie"].includes(key)) mt = "video";
-     else if (["img", "image", "images", "manga", "comic"].includes(key)) mt = "image";
+     else if (["img", "image", "images", "book", "comic"].includes(key)) mt = "image";
      libs.push({ id: `${this.id}_${key}`, name: key.charAt(0).toUpperCase() + key.slice(1), path: base, mediaType: mt } as Library);
     } else if (typeof val === "string") {
      const uri = await this.resolveChildUri(base, val);
