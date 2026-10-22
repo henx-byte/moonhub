@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { MediaItem } from "../types";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
+import { useIcecastMetadata } from './useIcecast';
 
 let TrackPlayer: any = null;
 let Capability: any = null;
@@ -135,6 +136,15 @@ export function useMp3() {
     })();
     return () => clearInterval(intervalRef.current);
   }, []);
+
+  const icecastTitle = useIcecastMetadata(current?.uri || null);
+
+  useEffect(() => {
+    if (icecastTitle) {
+      console.log('[MP3] update title dari Icecast:', icecastTitle);
+      setCurrent(prev => prev ? { ...prev, title: icecastTitle } : prev);
+    }
+  }, [icecastTitle]);
 
   const play = async (item: MediaItem, newQueue?: MediaItem[]) => {
     const q = newQueue && newQueue.length > 0 ? [...newQueue] : [item];

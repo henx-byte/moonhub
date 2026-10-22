@@ -64,6 +64,10 @@ const fetchStations = async (path: string, useCache = true) => {
   return result;
 };
 
+const getSearch = async (parameter:string) => {
+  return await fetchStations(`/json/stations/search?hls=0&reverse=true&nameExact=false&hidebroken=true&${parameter}`)
+}
+
 const fuzzyMatch = (name: string, query: string): boolean => {
   const n = name.toLowerCase();
   const q = query.toLowerCase().trim();
@@ -75,16 +79,19 @@ const fuzzyMatch = (name: string, query: string): boolean => {
 };
 
 export const getTopStations = async (limit = 50) => {
-  return fetchStations(`/json/stations/topclick/${limit}?hidebroken=true&order=votes&reverse=true`);
+  return await getSearch(`order=votes&limit=${limit}`)
+  // return fetchStations(`/json/stations/topclick/${limit}?hidebroken=true&order=votes&reverse=true`);
 };
 
-export const getIndoStations = async (limit = 50) => {
-  return fetchStations(`/json/stations/bycountrycodeexact/ID?hidebroken=true&order=votes&reverse=true&limit=${limit}`);
+export const getIndoStations = async (limit = 10) => {
+  return await getSearch(`countrycode=ID&limit=${limit}`)
+  // return fetchStations(`/json/stations/bycountrycodeexact/ID?hidebroken=true&order=votes&reverse=true&limit=${limit}`);
 };
 
-export const getStationsByCountry = async (code: string, limit = 80) => {
-  if (code === "TOP") return getTopStations(limit);
-  return fetchStations(`/json/stations/bycountrycodeexact/${code}?hidebroken=true&order=votes&reverse=true&limit=${limit}`);
+export const getStationsByCountry = async (code: string, limit = 10) => {
+  if (code === "TOP") return await getTopStations(limit);
+  return await getSearch(`countrycode=${code}&limit=${limit}&order=votes`)
+  // return fetchStations(`/json/stations/bycountrycodeexact/${code}?hidebroken=true&order=votes&reverse=true&limit=${limit}`);
 };
 
 export const searchStations = async (country:string, query: string): Promise<RadioStation[]> => {

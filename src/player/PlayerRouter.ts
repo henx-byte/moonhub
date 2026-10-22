@@ -7,7 +7,7 @@ export function getPlayerType(item: MediaItem): PlayerType {
   // reader
   if (item.mediaType === 'comic' || (item as any).type === 'comic' || item.extra?.iscomic) return 'reader';
   // mp3 only - local files, .mp3, .m4a, .wav, .flac, .ogg
-  if (uri.endsWith('.mp3') || uri.endsWith('.m4a') || uri.endsWith('.wav') || uri.endsWith('.flac') || uri.endsWith('.ogg') || item.mediaType === 'music' && !uri.includes('m3u8')) {
+  if (uri.endsWith('.mp3') || uri.endsWith('.m4a') || uri.endsWith('.wav') || uri.endsWith('.flac') || uri.endsWith('.ogg') || item.mediaType === 'music' && !uri.includes('m3u8') || uri.includes(':8000') || uri.includes('/stream') || uri.includes('icecast') || uri.includes(':8443')) {
     return 'mp3';
   }
   // hls - .m3u8, radio live, video

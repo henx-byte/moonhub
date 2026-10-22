@@ -1,7 +1,7 @@
 // src/context/PlayerCoreContext.tsx - FULL LENGKAP UNTUK expo-video
-import React, { createContext, useContext, useMemo, useCallback } from 'react';
-import { useHlsPlayer } from './HlsContext';
-import { useMp3Player } from './Mp3Context';
+import React, { createContext, useContext, useMemo, useCallback } from "react";
+import { useHlsPlayer } from "./HlsContext";
+import { useMp3Player } from "./Mp3Context";
 
 const PlayerCore = createContext<any>(null);
 
@@ -15,12 +15,22 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const play = useCallback(
     async (item: any) => {
-      if (item?.extra?.isLive || item?.uri?.startsWith('http')) {
-        try { await mp3?.pause?.(); } catch {}
-        return hls?.play?.(item);
-      } else {
-        try { await hls?.pause?.(); } catch {}
-        return mp3?.play?.(item);
+      try {
+        if (["video","radio"].includes(item?.type)) {
+          try {
+            await mp3?.pause?.();
+          } catch {}
+          return hls?.play?.(item);
+        } else if (["mp3"].includes(item?.type)) {
+          try {
+            await hls?.pause?.();
+          } catch {}
+          return mp3?.play?.(item);
+        } else {
+           console.log("type tidak cocok");
+        }
+      } catch (error) {
+        console.log("type tidak cocok: " + error);
       }
     },
     [hls, mp3],
@@ -56,7 +66,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 export const Player = PlayerProvider;
 export const useCorePlayer = () => {
   const ctx = useContext(PlayerCore);
-  if (!ctx) throw new Error('useCorePlayer must be inside <PlayerProvider>');
+  if (!ctx) throw new Error("useCorePlayer must be inside <PlayerProvider>");
   return ctx;
 };
 export const useUnifiedPlayer = useCorePlayer;

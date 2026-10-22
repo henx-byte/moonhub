@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+# moon-gitingest v1.3.0 - Android wuz wuz edition
+# Pack project directory into single txt for gitingest / AI context
+# Usage:
+#   ./moon-gitingest -d .          # scan all current directory
+#   ./moon-gitingest -d ./app      # scan ./app directory
+#   ./moon-gitingest -d . -o out.txt
+
+set -e
+
+VERSION="1.3.0"
+TARGET_DIR="."
+OUTPUT_FILE=""
+SHOW_TREE_ONLY=false
+
+# default ignores - auto skip
+IGNORE_DIRS=(
+  "node_modules"
+  ".git"
+  ".next"
+  "dist"
+  "build"
+  ".expo"
+  "android/app/build"
+  "ios/build"
+  ".gradle"
+  "__pycache__"
+  ".venv"
+  "vendor"
+)
+
+IGNORE_EXT=(
+  "*.png" "*.jpg" "*.jpeg" "*.gif" "*.webp" "*.ico" "*.svg"
+  "*.mp4" "*.mp3" "*.wav" "*.ttf" "*.otf" "*.woff*"
+  "*.zip" "*.tar" "*.gz" "*.apk" "*.aab"
+  "*.lock" "package-lock.json" "yarn.lock" "pnpm-lock.yaml"
+)
+
+print_help() {
+cat <<'HELP'
+moon-gitingest - Pack codebase for gitingest
+
+Usage:
+  ./moon-gitingest [options]
+
+Options:
+  -d, --dir <path>       Directory to scan (default: .)
+                         ./moon-gitingest -d .
+                         ./moon-gitingest -d ./app
+  -o, --output <file>    Output file (default: ./gitingest-<dirname>.txt)
+  -v, --version          Show version
+  -h, --help             Show this help
+  --tree                 Only show file tree, no content
+
+Features:
+  - Auto skip: node_modules, .git, dist, build, .next, .expo, __pycache__, etc
+  - Auto skip binary/images
+  - Output ready for https://gitingest.com or paste to AI
+
+Examples:
+  ./moon-gitingest -d .
+  ./moon-gitingest -d ./src
+  ./moon-gitingest -d ./app -o moonhub.txt
+HELP
+}
+
+print_version() {
+  echo "moon-gitingest v$VERSION"
+}
+
+# parse args
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -d|--dir)
+      TARGET_DIR="$2"
+      shift 2
+      ;;
+    -o|--output)
+      OUTPUT_FILE="$2"
+      shift 2
+      ;;
+    -v|--version)
+      print_version
+      exit 0
+      ;;
+    -h|--help)
+      print_help
+      exit 0
+      ;;
+    --tree)
+      SHOW_TREE_ONLY=true
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      print_help
+      exit 1
+      ;;
+  esac
+done
+
+if [ ! -d "$TARGET_DIR" ]; then
+  echo "[ERROR] Directory not found: $TARGET_DIR"
+  exit 1
+fi
+
+TARGET_DIR=$(cd "$TARGET_DIR" && pwd)
+BASENAME=$(basename "$TARGET_DIR")
+
+if [ -z "$OUTPUT_FILE" ]; then
+  OUTPUT_FILE="./gitingest-${BASENAME}.txt"
+fi
+
+# build find excludes
+FIND_EXCLUDES=""
+for d in "${IGNORE_DIRS[@]}"; do
+  FIND_EXCLUDES="$FIND_EXCLUDES -not -path "*/$d/*" -not -path "*/$d""
+done
+
+# temp file
+TMP_LIST=$(mktemp)
+
+echo "[moonhub-gitingest v$VERSION] Scanning: $TARGET_DIR"
+echo "[ignore] ${IGNORE_DIRS[*]}"
+
+# get file list
+# shellcheck disable=SC2086
+eval find "$TARGET_DIR" -type f   -not -path "*/node_modules/*"   -not -path "*/.git/*"   -not -path "*/dist/*"   -not -path "*/build/*"   -not -path "*/.next/*"   -not -path "*/.expo/*"   -not -path "*/__pycache__/*"   -not -path "*/.venv/*"   -not -name "*.png" -not -name "*.jpg" -not -name "*.jpeg" -not -name "*.gif" -not -name "*.webp"   -not -name "*.mp4" -not -name "*.mp3" -not -name "*.zip" -not -name "*.apk" -not -name "package-lock.json"   | sort > "$TMP_LIST"
+
+COUNT=$(wc -l < "$TMP_LIST")
+echo "[found] $COUNT files"
+
+if [ "$SHOW_TREE_ONLY" = true ]; then
+  cat "$TMP_LIST"
+  rm "$TMP_LIST"
+  exit 0
+fi
+
+{
+echo "# Gitingest Dump - Moonhub"
+echo "# Source: $TARGET_DIR"
+echo "# Version: $VERSION"
+echo "# Generated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+echo "# Files: $COUNT"
+echo ""
+echo "## File Tree"
+cat "$TMP_LIST" | sed "s|$TARGET_DIR|.|g"
+echo ""
+echo "---"
+echo ""
+
+while IFS= read -r file; do
+  # skip empty
+  [ -z "$file" ] && continue
+  rel=${file#$TARGET_DIR/}
+  size=$(wc -c < "$file" 2>/dev/null || echo 0)
+  # skip huge files > 500KB
+  if [ "$size" -gt 512000 ]; then
+    echo "## FILE: $rel (SKIPPED - ${size} bytes too large)"
+    echo ""
+    continue
+  fi
+  echo "## FILE: $rel"
+  echo '```'
+  # try cat, if binary skip
+  if file "$file" | grep -q "text"; then
+    cat "$file"
+  else
+    echo "[binary file skipped]"
+  fi
+  echo '```'
+  echo ""
+done < "$TMP_LIST"
+
+} > "$OUTPUT_FILE"
+
+rm "$TMP_LIST"
+
+echo "[OK] Output -> $OUTPUT_FILE ($(wc -l < "$OUTPUT_FILE") lines, $(du -h "$OUTPUT_FILE" | cut -f1))"
+echo "Usage: cat $OUTPUT_FILE | pbcopy / or upload to gitingest.com"

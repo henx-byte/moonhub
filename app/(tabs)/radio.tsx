@@ -12,7 +12,6 @@ import {
 import { useEffect, useState, useCallback, memo, useRef } from 'react';
 import {
 	getTopStations,
-	getIndoStations,
 	searchStations,
 	resolveStream,
 	getRadioMirror,
@@ -491,7 +490,7 @@ export default function RadioScreen() {
 			if (tab === 'top') setStations(await getTopStations(50));
 			else if (tab === 'indo' || countryCode) {
 				if (countryCode === 'TOP') setStations(await getTopStations(50));
-				else setStations(await getStationsByCountry(countryCode, 80));
+				else setStations(await getStationsByCountry(countryCode, 50));
 			}
 		} catch {}
 		setLoading(false);
@@ -947,7 +946,7 @@ export default function RadioScreen() {
 								/>
 							</TouchableOpacity>
 						</View>
-						<ScrollView style={{ padding: 12,marginBottom:20 }}>
+						<ScrollView style={{ paddingHorizontal: 12,marginBottom:12 }}>
 							{COUNTRIES.map(c => (
 								<TouchableOpacity
 									key={c.code}
