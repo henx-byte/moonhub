@@ -43,5 +43,6 @@ yarn-error.*
 moonhub_gitingest.txt
 moonhub_gitingest.sh
 *.log
+*.txt
 # Lint
 .lint/tmp/

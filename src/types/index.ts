@@ -1,20 +1,18 @@
 // FIXED TYPES - Generic SourceConfig type: string + Bookmark
 // Core: Server bisa format apa aja, yang penting return MediaItem[]
 
-export type SourceType = string; // FIX: Generic! Bisa "komikindo", "anichin", "local", apa aja
+export type SourceType = string; 
 
 export type MediaType = 
   | "music" 
   | "video" 
   | "image" 
   | "book" 
-  | "manhwa" 
-  | "manhua"
   | "comic"
   | "mixed"
-  | string; // FIX: Generic juga, bisa "podcast", "audiobook", etc
+  | string; 
 
-export type MediaItemType = "song" | "movie" | "chapter" | "book" | "image" | "video" | "audio" | string;
+export type MediaItemType = "book" | "image" | "video" | "audio" | string;
 
 export interface Library {
   id: string;
@@ -27,7 +25,7 @@ export interface Library {
 export interface SourceConfig {
   id: string;
   name: string;
-  type: SourceType; // FIX: sekarang generic string, bukan union terbatas
+  type: SourceType; 
   enabled: boolean;
   config: {
     path?: string;
@@ -35,7 +33,6 @@ export interface SourceConfig {
     displayPath?: string;
     url?: string;
     name?: string;
-    // Bisa apa aja - extension bisa nambah field sendiri
     [key: string]: any;
   };
   libraries: Library[];

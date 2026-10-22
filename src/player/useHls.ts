@@ -1,55 +1,112 @@
-import { useState, useEffect } from "react";
-import { useVideoPlayer } from "expo-video";
-import { MediaItem } from "../types";
+// src/player/useHls.ts - FULL LENGKAP UNTUK expo-video (tinggal copas)
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { useVideoPlayer, VideoPlayer } from 'expo-video';
 
 export function useHls() {
-  const [current, setCurrent] = useState<MediaItem | null>(null);
+  const playerRef = useRef<VideoPlayer | null>(null);
+  const [current, setCurrent] = useState<any | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [position, setPosition] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [isBuffering, setIsBuffering] = useState(false);
 
-  const player = useVideoPlayer("", (p) => {
+  const player = useVideoPlayer('', (p) => {
     p.loop = false;
-    p.staysActiveInBackground = true;
-    p.showNowPlayingNotification = true;
-    try { (p as any).allowsExternalPlayback = true; } catch {}
+    p.muted = false;
   });
 
   useEffect(() => {
-    const s1 = player.addListener("playingChange", (e:any) => {
-      const playing = typeof e === "boolean" ? e : !!e?.isPlaying;
+    playerRef.current = player;
+
+    const subStatus = player.addListener('statusChange', (payload: any) => {
+      const status = payload?.status || payload;
+      console.log('[Hls expo-video] status:', status);
+      if (status === 'loading' || status?.status === 'loading') {
+        setIsBuffering(true);
+      } else if (status === 'readyToPlay' || status?.status === 'readyToPlay') {
+        setIsBuffering(false);
+      } else if (status === 'error') {
+        setIsBuffering(false);
+        setIsPlaying(false);
+      }
+    });
+
+    const subPlaying = player.addListener('playingChange', (playing: boolean) => {
+      console.log('[Hls expo-video] playing:', playing);
       setIsPlaying(playing);
+      if (playing) setIsBuffering(false);
     });
-    const s2 = player.addListener("statusChange", (e:any) => {
-      const d = e?.status?.duration || e?.duration;
-      if (d) setDuration(d);
-    });
-    const s3 = player.addListener("timeUpdate", (e:any) => {
-      if (e?.currentTime !== undefined) setPosition(e.currentTime);
-    });
-    (globalThis as any).__STOP_HLS__ = () => { try { player.pause(); setIsPlaying(false); } catch {} };
-    return () => { s1?.remove?.(); s2?.remove?.(); s3?.remove?.(); };
+
+    let subBuffering: any = null;
+    try {
+      // @ts-ignore SDK 52+
+      subBuffering = player.addListener('isBufferingChange', (b: boolean) => {
+        console.log('[Hls expo-video] buffering:', b);
+        setIsBuffering(b);
+      });
+    } catch {}
+
+    return () => {
+      subStatus?.remove();
+      subPlaying?.remove();
+      subBuffering?.remove?.();
+    };
+  }, [player]);
+
+  const play = useCallback(async (item: any) => {
+    try {
+      setCurrent(item);
+      setIsBuffering(true);
+      setIsPlaying(false);
+      console.log('[Hls expo-video] Loading:', item.uri);
+      if (playerRef.current) {
+        // @ts-ignore
+        if (playerRef.current.replaceAsync) {
+          // @ts-ignore
+          playerRef.current.replaceAsync(item.uri);
+        } else {
+          // @ts-ignore
+          playerRef.current.src = item.uri;
+        }
+        playerRef.current.play();
+      }
+    } catch (e) {
+      console.log('[Hls] Play error:', e);
+      setIsBuffering(false);
+      setIsPlaying(false);
+    }
   }, []);
 
-  const play = async (item: MediaItem) => {
+  const pause = useCallback(async () => {
     try {
-      (globalThis as any).__STOP_MP3__?.();
-      (globalThis as any).__STOP_WEBVIEW__?.();
+      playerRef.current?.pause();
+      setIsPlaying(false);
+      setIsBuffering(false);
     } catch {}
-    setCurrent(item);
+  }, []);
+
+  const resume = useCallback(async () => {
     try {
-      const p: any = player;
-      if (p.replaceAsync) await p.replaceAsync(item.uri);
-      else p.replace(item.uri);
-      player.play();
-    } catch (e) { console.log("[HLS] play error", e); }
+      setIsBuffering(true);
+      playerRef.current?.play();
+    } catch {}
+  }, []);
+
+  const stop = useCallback(async () => {
+    try {
+      playerRef.current?.pause();
+      setCurrent(null);
+      setIsPlaying(false);
+      setIsBuffering(false);
+    } catch {}
+  }, []);
+
+  return {
+    current,
+    isPlaying,
+    isBuffering,
+    play,
+    pause,
+    resume,
+    stop,
+    player,
   };
-
-  const pause = () => { try { player.pause(); } catch {} };
-  const resume = () => { try { player.play(); } catch {} };
-  const toggle = () => isPlaying ? pause() : resume();
-  const seek = (sec:number) => { try { (player as any).currentTime = sec; } catch {} };
-  const stop = () => { try { player.pause(); setCurrent(null); setIsPlaying(false); } catch {} };
-
-  return { current, isPlaying, position, duration, player, play, pause, resume, toggle, seek, stop, type: 'hls' as const };
 }

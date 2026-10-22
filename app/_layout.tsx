@@ -5,7 +5,7 @@ import { Mp3Provider } from '../src/context/Mp3Context';
 import { HlsProvider } from '../src/context/HlsContext';
 import { WebViewProvider } from '../src/context/WebViewContext';
 import { ReaderProvider } from '../src/context/ReaderContext';
-import { UnifiedProvider } from '../src/context/UnifiedPlayerContext';
+import { Player } from '../src/context/PlayerCoreContext';
 import { MiniPlayer } from '../src/components/MiniPlayer';
 import { Mp3PlayerContainer } from '../src/components/mp3/Mp3PlayerContainer';
 
@@ -17,13 +17,16 @@ export default function RootLayout() {
 				<HlsProvider>
 					<WebViewProvider>
 						<ReaderProvider>
-							<UnifiedProvider>
+							<Player>
 								<Stack
 									screenOptions={{
 										headerStyle: { backgroundColor: colors.background },
 										headerTintColor: colors.text,
 										contentStyle: { backgroundColor: colors.background },
+										headerShown: false,
 									}}>
+									<Stack.Screen name='index' />
+									<Stack.Screen name='welcome' />
 									<Stack.Screen
 										name='(tabs)'
 										options={{ headerShown: false }}
@@ -31,7 +34,7 @@ export default function RootLayout() {
 								</Stack>
 								<Mp3PlayerContainer />
 								<MiniPlayer />
-							</UnifiedProvider>
+							</Player>
 						</ReaderProvider>
 					</WebViewProvider>
 				</HlsProvider>
