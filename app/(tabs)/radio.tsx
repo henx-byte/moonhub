@@ -569,7 +569,7 @@ export default function RadioScreen() {
 					title: s.name,
 					path: freshUrl,
 					uri: freshUrl,
-					mediaType: 'music',
+					mediaType: 'radio',
 					type: 'radio',
 					size: 0,
 					duration: 0,

@@ -16,12 +16,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const play = useCallback(
     async (item: any) => {
       try {
-        if (["video","radio"].includes(item?.type)) {
+        if (["video"].includes(item?.type)) {
           try {
             await mp3?.pause?.();
           } catch {}
           return hls?.play?.(item);
-        } else if (["mp3"].includes(item?.type)) {
+        } else if (["mp3","radio"].includes(item?.type)) {
           try {
             await hls?.pause?.();
           } catch {}
