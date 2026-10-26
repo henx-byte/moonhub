@@ -34,13 +34,6 @@ export function Mp3MiniPlayer({ onExpand }: { onExpand?: () => void }) {
   const current = player?.current;
   if (!current) return null;
   
-  const isRadio =
-    current?.mediaType === "radio" ||
-    current?.type === "radio" ||
-    current?.extra?.isRadio === true ||
-    (current?.sourceId && current.sourceId.toLowerCase().includes("radio"));
-
-  if (isRadio) return null;
 
   const hasQueue = player?.queue?.length > 1;
   const queuePos =
@@ -118,9 +111,10 @@ export function Mp3MiniPlayer({ onExpand }: { onExpand?: () => void }) {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    left: 12,
-    right: 12,
-    bottom: 90,
+    left: 100,
+    right: 22,
+    bottom: 28,
+    height: 72,
     backgroundColor: "#1a1a1a",
     borderRadius: 16,
     borderWidth: 1,

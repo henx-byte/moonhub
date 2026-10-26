@@ -132,36 +132,11 @@ export default function TabLayout() {
 					name='index'
 					options={{ href: null }}
 				/>
-				<Tabs.Screen
-					name='bookmark'
-					options={{ href: null }}
-				/>
-				<Tabs.Screen
-					name='history'
-					options={{ href: null }}
-				/>
-				<Tabs.Screen
-					name='sources'
-					options={{ href: null }}
-				/>
-				<Tabs.Screen
-					name='library'
-					options={{ href: null }}
-				/>
-				<Tabs.Screen
-					name='manga'
-					options={{ href: null }}
-				/>
 			</Tabs>
 			<FloatingFab />
 		</View>
 	);
 }
-
-// INI YANG BIKIN RADIO DEFAULT PAS BUKA APP
-export const unstable_settings = {
-	initialRouteName: 'radio',
-};
 
 const s = StyleSheet.create({
 	backdrop: { ...StyleSheet.absoluteFillObject, zIndex: 10 },

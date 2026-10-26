@@ -47,7 +47,7 @@ export function Mp3FullPlayer({ visible, onClose }: { visible: boolean; onClose:
 
           <View style={{ marginTop: 16, alignItems: 'center' }}>
             <Text style={styles.bigTitle} numberOfLines={1}>{current?.title || current?.name}</Text>
-            <Text style={styles.bigSub}>{current?.artist || 'Unknown'} • {formatTime(player?.position)} / {formatTime(player?.duration)}</Text>
+            <Text style={styles.bigSub}>{current?.artist || current?.state || current?.country || 'Unknown'} • {formatTime(player?.position)} / {formatTime(player?.duration)}</Text>
           </View>
 
           <Mp3ProgressBar position={player?.position || 0} duration={player?.duration || 0} onSeek={(s) => player?.seek?.(s)} />
