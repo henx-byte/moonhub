@@ -12,21 +12,21 @@ export default function RootLayout() {
       <StatusBar style="light" />
       <Mp3Provider>
         <HlsProvider>
-            <Player>
-              <Stack
-                screenOptions={{
-                  headerStyle: { backgroundColor: colors.background },
-                  headerTintColor: colors.text,
-                  contentStyle: { backgroundColor: colors.background },
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="index" />
-                <Stack.Screen name="welcome" />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              </Stack>
-              <Mp3PlayerContainer />
-            </Player>
+          <Player>
+            <Stack
+              screenOptions={{
+                headerStyle: { backgroundColor: colors.background },
+                headerTintColor: colors.text,
+                contentStyle: { backgroundColor: colors.background },
+                headerShown: false
+              }}
+            >
+              <Stack.Screen name="index" />
+              <Stack.Screen name="welcome" />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+            <Mp3PlayerContainer />
+          </Player>
         </HlsProvider>
       </Mp3Provider>
     </>

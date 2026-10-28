@@ -1,8 +1,11 @@
+
 import { useState, useEffect, useRef } from "react";
 import { MediaItem } from "../types";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework } from "expo-file-system";
 import { useIcyCast } from "./useIcyCast";
+
+const default_tumbnail = "https://raw.githubusercontent.com/henx-byte/moonhub/refs/heads/main/assets/icon.png"
 
 let TrackPlayer: any = null,
   Capability: any,
@@ -150,6 +153,23 @@ export function useMp3() {
     return () => clearInterval(intervalRef.current);
   }, []);
 
+  useEffect(() => {
+    if (!icyCast.parsed || !TrackPlayer) return;
+    const { title, artist } = icyCast.parsed;
+
+    (async () => {
+      const currentId = await TrackPlayer.getActiveTrackIndex();
+      const track = await TrackPlayer.getActiveTrack();
+      // update track yang lagi play
+      if (title && artist) {
+        await TrackPlayer.updateMetadataForTrack(currentId as any, {
+          title: String(title || track.title),
+          artist: String(artist || track.artist),
+        });
+      }
+    })();
+  }, [icyCast.parsed]);
+
   const play = async (
     item: MediaItem,
     newQueue?: MediaItem[],
@@ -168,19 +188,15 @@ export function useMp3() {
       for (const m of q) {
         if (!m.uri || m.uri.trim() === "") continue;
         const fileUri = await toFileUri(m.uri, m.id);
-        if (!fileUri.trim()) continue;
-        const isHls = fileUri.toLowerCase().includes(".m3u8");
+        const isHls = fileUri.toLowerCase().includes(".m3u8")
+         if (!fileUri.trim()) continue;
         tracks.push({
           id: m.id,
           url: fileUri,
-          title: m.title || "Unknown",
-          artist: m.artist || m.state || m.country || "Unknown",
-          artwork:
-            m.thumbnail ||
-            "https://raw.githubusercontent.com/henx-byte/moonhub/refs/heads/main/assets/icon.png",
-          type: isHls ? "hls" : "default", 
-          isLive: isHls || m.type === "radio" || item.type === "radio", 
-          duration: isHls ? 0 : undefined
+          title: m.title,
+          artist: m.artist,
+          artwork: m.thumbnail || default_tumbnail,
+          type: isHls ? "hls" : "default"
         });
       }
       if (tracks.length === 0) return;
