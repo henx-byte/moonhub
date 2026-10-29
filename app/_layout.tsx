@@ -15,10 +15,9 @@ export default function RootLayout() {
           <Player>
             <Stack
               screenOptions={{
-                headerStyle: { backgroundColor: colors.background },
-                headerTintColor: colors.text,
                 contentStyle: { backgroundColor: colors.background },
-                headerShown: false
+                headerShown: false,
+                animation: "slide_from_bottom"
               }}
             >
               <Stack.Screen name="index" />

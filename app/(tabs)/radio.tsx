@@ -1456,7 +1456,7 @@ export default function RadioScreen() {
         </View>
       </Modal>
 
-      <Modal visible={showDeleteConfirm} animationType="fade" transparent>
+      <Modal visible={showDeleteConfirm} animationType="slide" transparent>
         <View
           style={{
             flex: 1,
@@ -1560,7 +1560,7 @@ export default function RadioScreen() {
 
       <Modal
         visible={showRemoveStationConfirm}
-        animationType="fade"
+        animationType="slide"
         transparent
       >
         <View
