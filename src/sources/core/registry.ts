@@ -14,7 +14,9 @@ class CoreRegistry {
 
   register(type: string, sourceClass: SourceClass) {
     const normalized = type.toLowerCase().trim();
-    console.log(`[Core] Register source type: ${normalized} -> ${sourceClass.name}`);
+    console.log(
+      `[Core] Register source type: ${normalized} -> ${sourceClass.name}`
+    );
     this.registry.set(normalized, sourceClass);
   }
 
@@ -36,10 +38,11 @@ class CoreRegistry {
       comic: "book",
       manhwa: "book",
       manhua: "book",
-      doujin: "book",
+      doujin: "book"
     };
     const aliased = aliases[normalized];
-    if (aliased && this.registry.has(aliased)) return this.registry.get(aliased);
+    if (aliased && this.registry.has(aliased))
+      return this.registry.get(aliased);
     return undefined;
   }
 
@@ -70,7 +73,7 @@ export function createSourceInstance(config: SourceConfig): Source {
   console.log(`[Core] Creating source ${config.name} type=${type} (generic)`);
 
   const SourceClass = coreRegistry.get(type);
-  
+
   if (SourceClass) {
     return new SourceClass(config);
   }
@@ -81,7 +84,9 @@ export function createSourceInstance(config: SourceConfig): Source {
     // Coba cari cloud source
     const cloudClass = coreRegistry.get("cloud");
     if (cloudClass) {
-      console.log(`[Core] Fallback to cloud for unknown type ${type} with URL ${url}`);
+      console.log(
+        `[Core] Fallback to cloud for unknown type ${type} with URL ${url}`
+      );
       return new cloudClass(config);
     }
   }
@@ -93,13 +98,15 @@ export function createSourceInstance(config: SourceConfig): Source {
     return new localClass(config);
   }
 
-  throw new Error(`[Core] Unknown source type: ${type} and no fallback. Registered: ${coreRegistry.list().join(", ")}`);
+  throw new Error(
+    `[Core] Unknown source type: ${type} and no fallback. Registered: ${coreRegistry.list().join(", ")}`
+  );
 }
 
 export function createAllSources(configs: SourceConfig[]): Source[] {
   return configs
     .filter(c => c.enabled)
-    .map((c) => {
+    .map(c => {
       try {
         return createSourceInstance(c);
       } catch (e) {
@@ -112,7 +119,12 @@ export function createAllSources(configs: SourceConfig[]): Source[] {
 
 // Auto-register built-in sources (dipanggil sekali di app init)
 // Ini biar app lama tetap jalan tanpa perlu manual register
-export function registerBuiltins(sources: { local?: SourceClass, cloud?: SourceClass, radio?: SourceClass, comic?: SourceClass }) {
+export function registerBuiltins(sources: {
+  local?: SourceClass;
+  cloud?: SourceClass;
+  radio?: SourceClass;
+  book?: SourceClass;
+}) {
   if (sources.local) registerSource("local", sources.local);
   if (sources.cloud) {
     registerSource("cloud", sources.cloud);

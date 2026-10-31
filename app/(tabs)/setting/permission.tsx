@@ -8,7 +8,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as Notifications from 'expo-notifications';
 import * as Application from 'expo-application';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { colors, ios } from '../../../src/theme/colors';
+import { colors, ios } from '@/theme/colors';
 
 type Perms = { battery: boolean; storage: boolean; notif: boolean };
 

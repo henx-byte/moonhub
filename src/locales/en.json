@@ -1,0 +1,86 @@
+{
+  "common": {
+    "play": "Play",
+    "pause": "Pause",
+    "stop": "Stop",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "clear": "Clear",
+    "settings": "Settings",
+    "permission": "Permission",
+    "language": "Language",
+    "about": "About"
+  },
+  "tabs": {
+    "home": "Home",
+    "radio": "Radio",
+    "library": "Library",
+    "settings": "Settings"
+  },
+  "radio": {
+    "title": "Radio",
+    "searchPlaceholder": "Search radio...",
+    "favorites": "Favorites",
+    "allStations": "All Stations",
+    "playing": "Now Playing",
+    "noResults": "No results",
+    "noStations": "No stations",
+    "loadMore": "Load more",
+    "visibleCount": "Showing {{count}} stations"
+  },
+  "player": {
+    "miniPlayer": "Mini Player",
+    "fullPlayer": "Full Player",
+    "queue": "Queue",
+    "shuffle": "Shuffle",
+    "repeat": "Repeat",
+    "volume": "Volume",
+    "speed": "Speed"
+  },
+  "library": {
+    "local": "Local",
+    "cloud": "Cloud",
+    "comic": "Comic",
+    "book": "Book",
+    "music": "Music",
+    "video": "Video",
+    "bookmarks": "Bookmarks",
+    "playlists": "Playlists",
+    "recent": "Recently played"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languageDesc": "Choose app language",
+    "appearance": "Appearance",
+    "storage": "Storage",
+    "permissions": "Access Permissions",
+    "permissionsDesc": "Manage file and media access",
+    "about": "About MoonHub",
+    "version": "Version {{version}}"
+  },
+  "permission": {
+    "title": "Permission Required",
+    "storageTitle": "Storage Access",
+    "storageDesc": "MoonHub needs access to read your local music, video, and comic files",
+    "grant": "Grant Permission",
+    "granted": "Permission Granted",
+    "denied": "Permission Denied",
+    "openSettings": "Open Settings"
+  },
+  "welcome": {
+    "title": "Welcome to MoonHub",
+    "subtitle": "Personal media player",
+    "getStarted": "Get Started"
+  }
+}

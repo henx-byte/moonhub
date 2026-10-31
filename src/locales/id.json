@@ -1,0 +1,86 @@
+{
+  "common": {
+    "play": "Putar",
+    "pause": "Jeda",
+    "stop": "Berhenti",
+    "next": "Berikutnya",
+    "previous": "Sebelumnya",
+    "search": "Cari",
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "retry": "Coba lagi",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "add": "Tambah",
+    "remove": "Hapus",
+    "clear": "Bersihkan",
+    "settings": "Pengaturan",
+    "permission": "Izin",
+    "language": "Bahasa",
+    "about": "Tentang"
+  },
+  "tabs": {
+    "home": "Beranda",
+    "radio": "Radio",
+    "library": "Pustaka",
+    "settings": "Pengaturan"
+  },
+  "radio": {
+    "title": "Radio",
+    "searchPlaceholder": "Cari radio...",
+    "favorites": "Favorit",
+    "allStations": "Semua Stasiun",
+    "playing": "Sedang diputar",
+    "noResults": "Tidak ada hasil",
+    "noStations": "Tidak ada stasiun",
+    "loadMore": "Muat lebih banyak",
+    "visibleCount": "Menampilkan {{count}} stasiun"
+  },
+  "player": {
+    "miniPlayer": "Pemutar Mini",
+    "fullPlayer": "Pemutar Lengkap",
+    "queue": "Antrian",
+    "shuffle": "Acak",
+    "repeat": "Ulangi",
+    "volume": "Volume",
+    "speed": "Kecepatan"
+  },
+  "library": {
+    "local": "Lokal",
+    "cloud": "Cloud",
+    "comic": "Komik",
+    "book": "Buku",
+    "music": "Musik",
+    "video": "Video",
+    "bookmarks": "Bookmark",
+    "playlists": "Playlist",
+    "recent": "Terakhir diputar"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "language": "Bahasa",
+    "languageDesc": "Pilih bahasa aplikasi",
+    "appearance": "Tampilan",
+    "storage": "Penyimpanan",
+    "permissions": "Izin Akses",
+    "permissionsDesc": "Kelola izin file dan media",
+    "about": "Tentang MoonHub",
+    "version": "Versi {{version}}"
+  },
+  "permission": {
+    "title": "Izin Diperlukan",
+    "storageTitle": "Akses Penyimpanan",
+    "storageDesc": "MoonHub butuh akses untuk membaca file musik, video, dan komik lokal",
+    "grant": "Berikan Izin",
+    "granted": "Izin Diberikan",
+    "denied": "Izin Ditolak",
+    "openSettings": "Buka Pengaturan"
+  },
+  "welcome": {
+    "title": "Selamat datang di MoonHub",
+    "subtitle": "Personal media player",
+    "getStarted": "Mulai"
+  }
+}

@@ -85,4 +85,3 @@ const PlaybackService = async function() {
 
 
 export default PlaybackService;
-module.exports = PlaybackService;

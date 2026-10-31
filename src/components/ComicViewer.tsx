@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image, Dimensions, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
-import { colors } from "../../src/theme/colors";
+import { colors } from "@/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");

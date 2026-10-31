@@ -13,7 +13,7 @@ import Animated, {
   FadeIn
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { colors } from "../../src/theme/colors";
+import { colors } from "@/theme/colors";
 
 // CUMA RADIO & SETTINGS YANG MUNCUL DULU
 const MENU = [
@@ -133,7 +133,7 @@ export default function TabLayout() {
         <Stack.Screen name="setting" options={{ title: "Settings" }} />
 
         {/* SEMBUNYIKAN DULU */}
-        <Stack.Screen name="index" options={{ href: null }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
         <FloatingFab />
     </View>

@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as MediaLibrary from "expo-media-library";
 import * as Notifications from "expo-notifications";
-import { colors, ios } from "../../../src/theme/colors";
+import { colors, ios } from "@/theme/colors";
 
 export default function SettingIndex() {
   const router = useRouter();

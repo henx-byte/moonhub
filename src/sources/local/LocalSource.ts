@@ -85,7 +85,7 @@ export class LocalSource extends Source {
    if (!chunk) return undefined;
 
    // decode base64 -> binary
-   const binary = typeof atob !== "undefined" ? atob(chunk) : (global as any).Buffer ? (global as any).Buffer.from(chunk, "base64").toString("binary") : "";
+   const binary = typeof atob !== "undefined" ? atob(chunk) : (globalThis as any).Buffer ? (globalThis as any).Buffer.from(chunk, "base64").toString("binary") : "";
    if (!binary) return undefined;
    const bytes = new Uint8Array(binary.length);
    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i) & 0xff;
@@ -126,7 +126,7 @@ export class LocalSource extends Source {
      try {
       foundB64 = btoa(s);
      } catch {
-      foundB64 = (global as any).Buffer ? (global as any).Buffer.from(s, "binary").toString("base64") : undefined;
+      foundB64 = (globalThis as any).Buffer ? (globalThis as any).Buffer.from(s, "binary").toString("base64") : undefined;
      }
      mime = m.includes("png") ? "image/png" : "image/jpeg";
      break;

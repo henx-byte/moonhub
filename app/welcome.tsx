@@ -25,7 +25,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import * as Application from 'expo-application';
-import { colors, ios } from '../src/theme/colors';
+import { colors, ios } from '@/theme/colors';
 
 const STEPS = [
   { key: 'intro', title: 'MoonHub', sub: 'GLOBAL' },

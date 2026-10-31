@@ -1,6 +1,6 @@
 // app/(tabs)/setting/_layout.tsx
 import { Stack } from "expo-router";
-import { colors } from "../../../src/theme/colors";
+import { colors } from "@/theme/colors";
 
 export default function SettingLayout() {
   return (

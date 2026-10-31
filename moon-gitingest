@@ -9,6 +9,8 @@ TARGET_PATH="."
 OUTPUT_FILE=""
 SHOW_TREE_ONLY=false
 IS_SINGLE_FILE=false
+USE_GITIGNORE=false
+GITIGNORE_PATTERNS=()
 
 IGNORE_DIRS=(
   "node_modules"
@@ -29,7 +31,7 @@ IGNORE_DIRS=(
 IGNORE_EXT=(
   "*.png" "*.jpg" "*.jpeg" "*.gif" "*.webp" "*.ico" "*.svg"
   "*.mp4" "*.mp3" "*.wav" "*.ttf" "*.otf" "*.woff" "*.woff2"
-  "*.zip" "*.tar" "*.gz" "*.apk" "*.aab" "*.txt"
+  "*.zip" "*.tar" "*.gz" "*.apk" "*.aab" "*.txt" "*.log"
   "*.lock" "package-lock.json" "yarn.lock" "pnpm-lock.yaml"
 )
 
@@ -50,6 +52,7 @@ Options:
   -v, --version          Show version
   -h, --help             Show this help
   --tree                 Only show file tree, no content
+  --gitignore            Use .gitignore patterns to ignore files (in addition to built-in ignores)
 
 Features:
   - Auto skip: node_modules, .git, dist, build, etc
@@ -76,6 +79,7 @@ while [[ $# -gt 0 ]]; do
     -v|--version) print_version; exit 0 ;;
     -h|--help) print_help; exit 0 ;;
     --tree) SHOW_TREE_ONLY=true; shift ;;
+    --gitignore) USE_GITIGNORE=true; shift ;;
     *) echo "Unknown option: $1"; print_help; exit 1 ;;
   esac
 done
@@ -122,6 +126,59 @@ else
   FIND_ARGS+=(-not -name "$OUTPUT_BASENAME" -not -path "$OUTPUT_FILE_ABS" -not -name "gitingest-*.txt")
 
   find "${FIND_ARGS[@]}" | sort > "$TMP_LIST"
+
+  # --gitignore: filter using .gitignore if enabled
+  if [ "$USE_GITIGNORE" = true ]; then
+    GITIGNORE_FILE="$TARGET_DIR/.gitignore"
+    if [ -f "$GITIGNORE_FILE" ]; then
+      echo "[gitignore] using $GITIGNORE_FILE"
+      # Use git check-ignore if inside a git repo (most accurate)
+      if git -C "$TARGET_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        FILTERED=$(mktemp)
+        while IFS= read -r f; do
+          if git -C "$TARGET_DIR" check-ignore -q "$f" 2>/dev/null; then
+            continue
+          fi
+          echo "$f" >> "$FILTERED"
+        done < "$TMP_LIST"
+        mv "$FILTERED" "$TMP_LIST"
+      else
+        # Fallback: manual parsing of .gitignore (basic support)
+        TMP_FILTERED=$(mktemp)
+        while IFS= read -r f; do
+          rel=${f#$TARGET_DIR/}
+          ignored=false
+          while IFS= read -r pat || [ -n "$pat" ]; do
+            # trim whitespace
+            pat=$(echo "$pat" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            # skip empty and comments
+            [ -z "$pat" ] && continue
+            case "$pat" in \#*) continue;; esac
+            # handle negation (!) - skip for now (don't ignore)
+            case "$pat" in !*) continue;; esac
+            # Remove trailing slash for dir match
+            clean_pat=$(echo "$pat" | sed 's:/$::')
+            # Match logic: use fnmatch via case
+            case "$rel" in
+              $pat|$clean_pat|$clean_pat/*|*/$clean_pat|*/$clean_pat/*) ignored=true; break;;
+              *) 
+                # also try glob pattern via bash matching
+                if [[ "$rel" == $pat ]] || [[ "$rel" == */$pat ]] || [[ "$rel" == $pat/* ]] || [[ "$rel" == */$pat/* ]]; then
+                  ignored=true; break
+                fi
+                ;;
+            esac
+          done < "$GITIGNORE_FILE"
+          if [ "$ignored" = false ]; then
+            echo "$f" >> "$TMP_FILTERED"
+          fi
+        done < "$TMP_LIST"
+        mv "$TMP_FILTERED" "$TMP_LIST"
+      fi
+    else
+      echo "[gitignore] .gitignore not found in $TARGET_DIR, skipping"
+    fi
+  fi
 fi
 
 COUNT=$(wc -l < "$TMP_LIST")

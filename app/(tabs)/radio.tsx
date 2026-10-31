@@ -21,12 +21,12 @@ import {
   RadioCountry,
   voteStation,
   clickStation
-} from "../../src/features/radio/radioBrowser";
-import { MediaItem } from "../../src/types";
+} from "@/features/radio/radioBrowser";
+import { MediaItem } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
-import { colors, ios } from "../../src/theme/colors";
+import { colors, ios } from "@/theme/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCorePlayer } from "../../src/context/PlayerCoreContext";
+import { useCorePlayer } from "@/context/PlayerCoreContext";
 
 const default_thumbnail =
   "https://raw.githubusercontent.com/henx-byte/moonhub/refs/heads/main/assets/icon.png";
@@ -222,7 +222,6 @@ export default function RadioScreen() {
       setDisplayStations(sorted);
     } catch {}
     setLoading(false);
-    setVisibleCount(10);
   };
 
   const handlePlay = useCallback(
@@ -280,7 +279,6 @@ export default function RadioScreen() {
     setRawStations(sorted);
     setDisplayStations(sorted);
     setLoading(false);
-    setVisibleCount(10);
   };
 
   const handleSelectCategory = async (catId: string) => {

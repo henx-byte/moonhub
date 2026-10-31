@@ -1,10 +1,11 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { colors } from "../src/theme/colors";
-import { Mp3Provider } from "../src/context/Mp3Context";
-import { HlsProvider } from "../src/context/HlsContext";
-import { Player } from "../src/context/PlayerCoreContext";
-import { Mp3PlayerContainer } from "../src/components/mp3/Mp3PlayerContainer";
+import { colors } from "@/theme/colors";
+import { Mp3Provider } from "@/context/Mp3Context";
+import { HlsProvider } from "@/context/HlsContext";
+import { Player } from "@/context/PlayerCoreContext";
+import { Mp3PlayerContainer } from "@/components/mp3/Mp3PlayerContainer";
+// import '@/locales/i18n'
 
 export default function RootLayout() {
   return (

@@ -192,7 +192,7 @@ export const searchStations = async (
       limit,
       offset
     );
-    return r.sort((a, b) => b.votes - a.votes);
+    return r.sort((a:any, b:any) => b.votes - a.votes);
   } catch {
     return [];
   }
