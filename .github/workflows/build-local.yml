@@ -7,7 +7,8 @@ jobs:
   build-local:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node 20
         uses: actions/setup-node@v4
@@ -25,13 +26,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install deps
+      - name: Install dependencies
         run: pnpm install
+
+      - name: Check Java version
+        run: |
+          java --version
+          echo "JAVA_HOME=$JAVA_HOME"
 
       - name: Setup EAS CLI
         run: npm install -g eas-cli
 
-      - name: Accept Android Licenses
+      - name: Accept Android licenses
         run: yes | sdkmanager --licenses || true
 
       - name: Build APK Dev Client LOCAL
@@ -45,3 +51,4 @@ jobs:
         with:
           name: moonhub-dev-apk
           path: ./build.apk
+          retention-days: 7
