@@ -46,3 +46,4 @@ moonhub_gitingest.sh
 *.txt
 # Lint
 .lint/tmp/
+.env
