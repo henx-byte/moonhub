@@ -9,16 +9,12 @@
       "distribution": "internal",
       "env": {
         "APP_VARIANT": "development"
-      },
-      "android": {
-        "package": "com.moonhub.app.dev"
       }
     },
     "preview": {
       "extends": "production",
       "distribution": "internal",
       "android": {
-        "package": "com.moonhub.app",
         "buildType": "apk"
       }
     },
