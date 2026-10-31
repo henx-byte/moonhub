@@ -1,8 +1,6 @@
 name: Build Dev Local (No EAS Quota)
 
 on:
-  push:
-    branches: [chore/pnpm]
   workflow_dispatch:
 
 jobs:
@@ -27,14 +25,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK (udah ada di runner, tapi pastiin)
-        uses: android-actions/setup-android@v3
-
       - name: Install deps
         run: pnpm install
 
       - name: Setup EAS CLI
         run: npm install -g eas-cli
+
+      - name: Accept Android Licenses
+        run: yes | sdkmanager --licenses || true
 
       - name: Build APK Dev Client LOCAL
         env:
